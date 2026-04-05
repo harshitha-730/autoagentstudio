@@ -2,6 +2,12 @@
 
 🤖 **AI-powered web app generator** - Create fully functional web applications from simple text prompts using Google Generative AI.
 
+## 🚀 Live Demo
+
+**Try it now!** → https://autoagentstudio-production.up.railway.app
+
+The app is live and ready to use. Register, generate AI-powered apps, and download them instantly!
+
 ## Features
 
 - ✨ **Instant App Generation** - Describe your idea, get a complete HTML/CSS/JavaScript app
