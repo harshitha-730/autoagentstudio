@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Rituals & Guidelines App</title>
+    <style>
+        /* CSS Styling */
+        :root {
+            --primary-color: #6a0dad; /* Deep Purple */
+            --primary-light: #9a4dff;
+            --secondary-color: #ffd700; /* Gold */
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #eee;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+            --shadow-medium: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-medium);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 25px 30px;
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-color);
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            letter-spacing: 1px;
+        }
+
+        .admin-toggle-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9em;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .admin-toggle-btn:hover {
+            background-color: #e6c200;
+        }
+
+        nav.main-nav {
+            display: flex;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav.main-nav button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background-color: transparent;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            color: var(--light-text-color);
+            border-bottom: 3px solid transparent;
+        }
+
+        nav.main-nav button:hover {
+            background-color: #e9e9e9;
+            color: var(--primary-color);
+        }
+
+        nav.main-nav button.active {
+            background-color: #fff;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: bold;
+        }
+
+        .content-section {
+            padding: 30px;
+            display: none; /* Hidden by default */
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        /* User Rituals and Guidelines Cards */
+        .ritual-list, .guideline-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .ritual-card, .guideline-card {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow-light);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .ritual-card:hover, .guideline-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .ritual-card h3, .guideline-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .ritual-card p, .guideline-card p {
+            margin-bottom: 8px;
+            color: var(--light-text-color);
+        }
+
+        .ritual-card p strong {
+            color: var(--text-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--light-text-color);
+            padding: 40px 20px;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: var(--light-text-color);
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 13, 173, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th, .admin-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background-color: var(--primary-color);
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .admin-table tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        .admin-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .admin-table .actions {
+            white-space: nowrap;
+        }
+
+        .admin-table .actions .btn {
+            padding: 8px 12px;
+            font-size: 0.85em;
+            margin-right: 5px;
+        }
+
+        .admin-table .actions .btn:last-child {
+            margin-right: 0;
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            header {
+                padding: 15px 20px;
+                font-size: 0.9em;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .admin-toggle-btn {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+            }
+
+            nav.main-nav button {
+                font-size: 1em;
+                padding: 12px 10px;
+            }
+
+            .content-section {
+                padding: 20px;
+            }
+
+            .ritual-list, .guideline-list {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-table th, .admin-table td {
+                padding: 10px;
+            }
+
+            .admin-table th:nth-child(3),
+            .admin-table td:nth-child(3) { /* Hide time on small screens for brevity */
+                display: none;
+            }
+            .admin-table th:nth-child(4),
+            .admin-table td:nth-child(4) { /* Hide description on small screens */
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Temple Rituals & Guidelines</h1>
+            <button id="admin-toggle" class="admin-toggle-btn">Go to Admin Panel</button>
+        </header>
+
+        <nav class="main-nav">
+            <button data-section="user-rituals" class="active">Rituals</button>
+            <button data-section="user-guidelines">Guidelines</button>
+            <button data-section="admin-panel" class="hidden">Admin</button> <!-- Hidden until admin mode is active -->
+        </nav>
+
+        <main>
+            <!-- User View - Rituals -->
+            <section id="user-rituals-section" class="content-section active">
+                <h2>Upcoming Rituals</h2>
+                <div id="user-rituals-list" class="ritual-list">
+                    <!-- Ritual cards will be injected here by JS -->
+                </div>
+                <div id="no-user-rituals" class="empty-state hidden">
+                    No upcoming rituals found. Please check back later!
+                </div>
+            </section>
+
+            <!-- User View - Guidelines -->
+            <section id="user-guidelines-section" class="content-section hidden">
+                <h2>Temple Visitor Guidelines</h2>
+                <div id="user-guidelines-list" class="guideline-list">
+                    <!-- Guideline cards will be injected here by JS -->
+                </div>
+                <div id="no-user-guidelines" class="empty-state hidden">
+                    No visitor guidelines available yet.
+                </div>
+            </section>
+
+            <!-- Admin Panel (initially hidden) -->
+            <section id="admin-panel-section" class="content-section hidden">
+                <h2>Admin Panel</h2>
+                <p class="mb-20">Manage rituals and visitor guidelines.</p>
+
+                <!-- Admin Rituals Management -->
+                <div id="admin-rituals-management">
+                    <h3>Manage Rituals</h3>
+                    <form id="ritual-form">
+                        <input type="hidden" id="ritual-id">
+                        <div class="form-group">
+                            <label for="ritual-name">Ritual Name:</label>
+                            <input type="text" id="ritual-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ritual-description">Description:</label>
+                            <textarea id="ritual-description" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="ritual-date">Date:</label>
+                            <input type="date" id="ritual-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ritual-time">Time:</label>
+                            <input type="time" id="ritual-time" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Ritual</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-ritual-edit" style="display: none;">Cancel Edit</button>
+                    </form>
+
+                    <h3 class="mt-20">Existing Rituals</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-rituals-table-body">
+                            <!-- Admin ritual rows will be injected here by JS -->
+                        </tbody>
+                    </table>
+                    <div id="no-admin-rituals" class="empty-state hidden">
+                        No rituals added yet.
+                    </div>
+                </div>
+
+                <hr style="margin: 40px 0; border-color: var(--border-color);">
+
+                <!-- Admin Guidelines Management -->
+                <div id="admin-guidelines-management">
+                    <h3>Manage Visitor Guidelines</h3>
+                    <form id="guideline-form">
+                        <input type="hidden" id="guideline-id">
+                        <div class="form-group">
+                            <label for="guideline-title">Guideline Title:</label>
+                            <input type="text" id="guideline-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guideline-content">Content (Do's & Don'ts, Dress Code, Etiquette):</label>
+                            <textarea id="guideline-content" rows="6"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Guideline</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-guideline-edit" style="display: none;">Cancel Edit</button>
+                    </form>
+
+                    <h3 class="mt-20">Existing Guidelines</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Content</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-guidelines-table-body">
+                            <!-- Admin guideline rows will be injected here by JS -->
+                        </tbody>
+                    </table>
+                    <div id="no-admin-guidelines" class="empty-state hidden">
+                        No guidelines added yet.
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // JavaScript Functionality
+        const LOCAL_STORAGE_RITUALS_KEY = 'templeApp.rituals';
+        const LOCAL_STORAGE_GUIDELINES_KEY = 'templeApp.guidelines';
+
+        let rituals = [];
+        let guidelines = [];
+        let editingRitualId = null;
+        let editingGuidelineId = null;
+        let isAdminMode = false;
+
+        // --- DOM Elements ---
+        const adminToggleBtn = document.getElementById('admin-toggle');
+        const mainNavButtons = document.querySelectorAll('.main-nav button');
+        const adminNavButton = document.querySelector('button[data-section="admin-panel"]');
+
+        // Rituals DOM
+        const userRitualsList = document.getElementById('user-rituals-list');
+        const noUserRituals = document.getElementById('no-user-rituals');
+        const adminRitualsTableBody = document.getElementById('admin-rituals-table-body');
+        const noAdminRituals = document.getElementById('no-admin-rituals');
+        const ritualForm = document.getElementById('ritual-form');
+        const ritualIdInput = document.getElementById('ritual-id');
+        const ritualNameInput = document.getElementById('ritual-name');
+        const ritualDescriptionInput = document.getElementById('ritual-description');
+        const ritualDateInput = document.getElementById('ritual-date');
+        const ritualTimeInput = document.getElementById('ritual-time');
+        const cancelRitualEditBtn = document.getElementById('cancel-ritual-edit');
+
+        // Guidelines DOM
+        const userGuidelinesList = document.getElementById('user-guidelines-list');
+        const noUserGuidelines = document.getElementById('no-user-guidelines');
+        const adminGuidelinesTableBody = document.getElementById('admin-guidelines-table-body');
+        const noAdminGuidelines = document.getElementById('no-admin-guidelines');
+        const guidelineForm = document.getElementById('guideline-form');
+        const guidelineIdInput = document.getElementById('guideline-id');
+        const guidelineTitleInput = document.getElementById('guideline-title');
+        const guidelineContentInput = document.getElementById('guideline-content');
+        const cancelGuidelineEditBtn = document.getElementById('cancel-guideline-edit');
+
+        // --- Utility Functions ---
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        function saveRituals() {
+            localStorage.setItem(LOCAL_STORAGE_RITUALS_KEY, JSON.stringify(rituals));
+        }
+
+        function loadRituals() {
+            const storedRituals = localStorage.getItem(LOCAL_STORAGE_RITUALS_KEY);
+            rituals = storedRituals ? JSON.parse(storedRituals) : [];
+        }
+
+        function saveGuidelines() {
+            localStorage.setItem(LOCAL_STORAGE_GUIDELINES_KEY, JSON.stringify(guidelines));
+        }
+
+        function loadGuidelines() {
+            const storedGuidelines = localStorage.getItem(LOCAL_STORAGE_GUIDELINES_KEY);
+            guidelines = storedGuidelines ? JSON.parse(storedGuidelines) : [];
+        }
+
+        function formatDate(dateString) {
+            // Add 'T00:00:00' to ensure date is parsed correctly in local timezone,
+            // avoiding potential timezone issues for date-only inputs.
+            const date = new Date(dateString + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const date = new Date(); // Use current date, but set hours/minutes
+            date.setHours(parseInt(hours, 10));
+            date.setMinutes(parseInt(minutes, 10));
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            mainNavButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section + '-section' === sectionId) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // --- Ritual Functions ---
+        function renderUserRituals() {
+            userRitualsList.innerHTML = '';
+            const now = new Date();
+
+            // Filter for upcoming rituals and sort them
+            const upcomingRituals = rituals
+                .filter(ritual => {
+                    const ritualDateTime = new Date(`${ritual.date}T${ritual.time}`);
+                    return ritualDateTime >= now;
+                })
+                .sort((a, b) => {
+                    const dateA = new Date(`${a.date}T${a.time}`);
+                    const dateB = new Date(`${b.date}T${b.time}`);
+                    return dateA - dateB;
+                });
+
+            if (upcomingRituals.length === 0) {
+                noUserRituals.classList.remove('hidden');
+            } else {
+                noUserRituals.classList.add('hidden');
+                upcomingRituals.forEach(ritual => {
+                    const ritualCard = document.createElement('div');
+                    ritualCard.classList.add('ritual-card');
+                    ritualCard.innerHTML = `
+                        <h3>${ritual.name}</h3>
+                        <p><strong>Date:</strong> ${formatDate(ritual.date)}</p>
+                        <p><strong>Time:</strong> ${formatTime(ritual.time)}</p>
+                        <p><strong>Description:</strong> ${ritual.description || 'No description provided.'}</p>
+                    `;
+                    userRitualsList.appendChild(ritualCard);
+                });
+            }
+        }
+
+        function renderAdminRituals() {
+            adminRitualsTableBody.innerHTML = '';
+            // Sort rituals by date for admin view, newest first
+            const sortedRituals = [...rituals].sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.time}`);
+                const dateB = new Date(`${b.date}T${b.time}`);
+                return dateB - dateA; // Newest first
+            });
+
+            if (sortedRituals.length === 0) {
+                noAdminRituals.classList.remove('hidden');
+            } else {
+                noAdminRituals.classList.add('hidden');
+                sortedRituals.forEach(ritual => {
+                    const row = adminRitualsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${ritual.name}</td>
+                        <td>${formatDate(ritual.date)}</td>
+                        <td>${formatTime(ritual.time)}</td>
+                        <td>${ritual.description.substring(0, 100)}${ritual.description.length > 100 ? '...' : ''}</td>
+                        <td class="actions">
+                            <button class="btn btn-primary" onclick="editRitual('${ritual.id}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteRitual('${ritual.id}')">Delete</button>
+                        </td>
+                    `;
+                });
+            }
+        }
+
+        function submitRitualForm(event) {
+            event.preventDefault();
+
+            const name = ritualNameInput.value.trim();
+            const description = ritualDescriptionInput.value.trim();
+            const date = ritualDateInput.value;
+            const time = ritualTimeInput.value;
+
+            if (!name || !date || !time) {
+                alert('Please fill in all required ritual fields: Name, Date, Time.');
+                return;
+            }
+
+            if (editingRitualId) {
+                // Update existing ritual
+                const ritualIndex = rituals.findIndex(r => r.id === editingRitualId);
+                if (ritualIndex > -1) {
+                    rituals[ritualIndex] = { id: editingRitualId, name, description, date, time };
+                }
+                editingRitualId = null;
+                ritualForm.querySelector('button[type="submit"]').textContent = 'Save Ritual';
+                cancelRitualEditBtn.style.display = 'none';
+            } else {
+                // Add new ritual
+                rituals.push({ id: generateId(), name, description, date, time });
+            }
+
+            saveRituals();
+            clearRitualForm();
+            renderAdminRituals();
+            renderUserRituals(); // Update user view as well
+        }
+
+        function editRitual(id) {
+            const ritual = rituals.find(r => r.id === id);
+            if (ritual) {
+                editingRitualId = id;
+                ritualIdInput.value = ritual.id;
+                ritualNameInput.value = ritual.name;
+                ritualDescriptionInput.value = ritual.description;
+                ritualDateInput.value = ritual.date;
+                ritualTimeInput.value = ritual.time;
+                ritualForm.querySelector('button[type="submit"]').textContent = 'Update Ritual';
+                cancelRitualEditBtn.style.display = 'inline-block';
+            }
+        }
+
+        function deleteRitual(id) {
+            if (confirm('Are you sure you want to delete this ritual?')) {
+                rituals = rituals.filter(r => r.id !== id);
+                saveRituals();
+                renderAdminRituals();
+                renderUserRituals(); // Update user view as well
+                if (editingRitualId === id) {
+                    clearRitualForm();
+                }
+            }
+        }
+
+        function clearRitualForm() {
+            ritualIdInput.value = '';
+            ritualNameInput.value = '';
+            ritualDescriptionInput.value = '';
+            ritualDateInput.value = '';
+            ritualTimeInput.value = '';
+            editingRitualId = null;
+            ritualForm.querySelector('button[type="submit"]').textContent = 'Save Ritual';
+            cancelRitualEditBtn.style.display = 'none';
+        }
+
+        // --- Guideline Functions ---
+        function renderUserGuidelines() {
+            userGuidelinesList.innerHTML = '';
+            if (guidelines.length === 0) {
+                noUserGuidelines.classList.remove('hidden');
+            } else {
+                noUserGuidelines.classList.add('hidden');
+                guidelines.forEach(guideline => {
+                    const guidelineCard = document.createElement('div');
+                    guidelineCard.classList.add('guideline-card');
+                    guidelineCard.innerHTML = `
+                        <h3>${guideline.title}</h3>
+                        <p>${guideline.content.replace(/\n/g, '<br>')}</p>
+                    `;
+                    userGuidelinesList.appendChild(guidelineCard);
+                });
+            }
+        }
+
+        function renderAdminGuidelines() {
+            adminGuidelinesTableBody.innerHTML = '';
+            if (guidelines.length === 0) {
+                noAdminGuidelines.classList.remove('hidden');
+            } else {
+                noAdminGuidelines.classList.add('hidden');
+                guidelines.forEach(guideline => {
+                    const row = adminGuidelinesTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${guideline.title}</td>
+                        <td>${guideline.content.substring(0, 150)}${guideline.content.length > 150 ? '...' : ''}</td>
+                        <td class="actions">
+                            <button class="btn btn-primary" onclick="editGuideline('${guideline.id}')">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteGuideline('${guideline.id}')">Delete</button>
+                        </td>
+                    `;
+                });
+            }
+        }
+
+        function submitGuidelineForm(event) {
+            event.preventDefault();
+
+            const title = guidelineTitleInput.value.trim();
+            const content = guidelineContentInput.value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in both guideline title and content.');
+                return;
+            }
+
+            if (editingGuidelineId) {
+                // Update existing guideline
+                const guidelineIndex = guidelines.findIndex(g => g.id === editingGuidelineId);
+                if (guidelineIndex > -1) {
+                    guidelines[guidelineIndex] = { id: editingGuidelineId, title, content };
+                }
+                editingGuidelineId = null;
+                guidelineForm.querySelector('button[type="submit"]').textContent = 'Save Guideline';
+                cancelGuidelineEditBtn.style.display = 'none';
+            } else {
+                // Add new guideline
+                guidelines.push({ id: generateId(), title, content });
+            }
+
+            saveGuidelines();
+            clearGuidelineForm();
+            renderAdminGuidelines();
+            renderUserGuidelines(); // Update user view
+        }
+
+        function editGuideline(id) {
+            const guideline = guidelines.find(g => g.id === id);
+            if (guideline) {
+                editingGuidelineId = id;
+                guidelineIdInput.value = guideline.id;
+                guidelineTitleInput.value = guideline.title;
+                guidelineContentInput.value = guideline.content;
+                guidelineForm.querySelector('button[type="submit"]').textContent = 'Update Guideline';
+                cancelGuidelineEditBtn.style.display = 'inline-block';
+            }
+        }
+
+        function deleteGuideline(id) {
+            if (confirm('Are you sure you want to delete this guideline?')) {
+                guidelines = guidelines.filter(g => g.id !== id);
+                saveGuidelines();
+                renderAdminGuidelines();
+                renderUserGuidelines(); // Update user view
+                if (editingGuidelineId === id) {
+                    clearGuidelineForm();
+                }
+            }
+        }
+
+        function clearGuidelineForm() {
+            guidelineIdInput.value = '';
+            guidelineTitleInput.value = '';
+            guidelineContentInput.value = '';
+            editingGuidelineId = null;
+            guidelineForm.querySelector('button[type="submit"]').textContent = 'Save Guideline';
+            cancelGuidelineEditBtn.style.display = 'none';
+        }
+
+        // --- Admin Mode Toggle ---
+        function toggleAdminMode() {
+            isAdminMode = !isAdminMode;
+            if (isAdminMode) {
+                adminToggleBtn.textContent = 'Exit Admin Panel';
+                adminNavButton.classList.remove('hidden');
+                // Auto-switch to admin panel and activate its nav button
+                showSection('admin-panel-section');
+            } else {
+                adminToggleBtn.textContent = 'Go to Admin Panel';
+                adminNavButton.classList.add('hidden');
+                // Auto-switch to user rituals when exiting admin mode
+                showSection('user-rituals-section');
+            }
+        }
+
+        // --- Initialization ---
+        function init() {
+            loadRituals();
+            loadGuidelines();
+            renderUserRituals();
+            renderUserGuidelines();
+            renderAdminRituals();
+            renderAdminGuidelines();
+
+            // Event Listeners
+            adminToggleBtn.addEventListener('click', toggleAdminMode);
+
+            mainNavButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const sectionId = button.dataset.section + '-section'; // Append '-section'
+                    showSection(sectionId);
+                });
+            });
+
+            ritualForm.addEventListener('submit', submitRitualForm);
+            cancelRitualEditBtn.addEventListener('click', clearRitualForm);
+
+            guidelineForm.addEventListener('submit', submitGuidelineForm);
+            cancelGuidelineEditBtn.addEventListener('click', clearGuidelineForm);
+        }
+
+        // Run initialization when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

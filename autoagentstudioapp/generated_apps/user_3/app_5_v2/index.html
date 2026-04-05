@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Rituals Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+        :root {
+            --primary-bg: #fdfaf6; /* Light cream */
+            --secondary-bg: #ffffff; /* White */
+            --accent-color: #a3885f; /* Soft gold/bronze */
+            --text-color: #333d29; /* Dark olive green */
+            --heading-color: #555c4d; /* Medium olive green */
+            --border-color: #e0e0e0; /* Light gray */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--accent-color);
+            color: var(--secondary-bg);
+            padding: 1.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.05em;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            gap: 2rem;
+        }
+
+        .selection-panel {
+            background-color: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .selection-panel label {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--heading-color);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .selection-panel select {
+            width: 100%;
+            max-width: 300px;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--primary-bg);
+            font-size: 1rem;
+            color: var(--text-color);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a3885f%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-13%205.1L153.2%20220.6c-4.7%204.6-11.6%204.6-16.2%200L18.7%2074.5c-4.7-4.7-4.7-12.3%200-17%204.7-4.7%2012.3-4.7%2017%200l116.5%20116.6%20116.5-116.6c4.7-4.7%2012.3-4.7%2017%200%204.6%204.7%204.6%2012.3%200%2017z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 0.8em;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .selection-panel select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .content-area {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+            line-height: 1.2;
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--heading-color);
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card p, .card ul {
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card li::before {
+            content: '•';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .disclaimer-card {
+            grid-column: 1 / -1; /* Spans across all columns */
+        }
+
+        .disclaimer-card h2 {
+            color: #d64045; /* A warning-like red */
+            border-color: #d64045;
+        }
+
+        .disclaimer-card .dos-donts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .disclaimer-card .dos-section, .disclaimer-card .donts-section {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .disclaimer-card .dos-section h3 {
+            color: #2a9d8f; /* Green for dos */
+        }
+
+        .disclaimer-card .donts-section h3 {
+            color: #e76f51; /* Orange/red for don'ts */
+        }
+
+        .disclaimer-card .dos-section li::before {
+            content: '✓';
+            color: #2a9d8f;
+        }
+
+        .disclaimer-card .donts-section li::before {
+            content: '✗';
+            color: #e76f51;
+        }
+
+        footer {
+            background-color: var(--heading-color);
+            color: var(--secondary-bg);
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            .content-area {
+                grid-template-columns: 1fr;
+            }
+            .disclaimer-card .dos-donts {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sacred Pathways: Temple Rituals Guide</h1>
+    </header>
+
+    <div class="container">
+        <div class="selection-panel">
+            <label for="temple-select">Select a Sacred Place:</label>
+            <select id="temple-select"></select>
+        </div>
+
+        <div class="content-area">
+            <div id="temple-description" class="card">
+                <h2>About the Temple</h2>
+                <p class="description-text"></p>
+            </div>
+
+            <div id="rituals-section" class="card">
+                <h2>Understanding Rituals</h2>
+                <div class="rituals-list"></div>
+            </div>
+
+            <div id="festivals-section" class="card">
+                <h2>Festivals & Holy Days</h2>
+                <div class="festivals-list"></div>
+            </div>
+
+            <div id="daily-rituals-section" class="card">
+                <h2>Daily Practices</h2>
+                <div class="daily-rituals-list"></div>
+            </div>
+
+            <div id="dos-donts-section" class="card disclaimer-card">
+                <h2>Important Guidelines for Visitors</h2>
+                <div class="dos-donts">
+                    <div class="dos-section">
+                        <h3>Do's</h3>
+                        <ul class="dos-list"></ul>
+                    </div>
+                    <div class="donts-section">
+                        <h3>Don'ts</h3>
+                        <ul class="donts-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Sacred Pathways Guide. All rights reserved. Designed for educational and informational purposes.</p>
+    </footer>
+
+    <script>
+        const temples = [
+            {
+                id: 'khasi_hills',
+                name: 'Sacred Hills Temple & Grove (Khasi Region)',
+                description: 'Nestled in the serene Khasi Hills, this sacred site embodies the spiritual traditions of the indigenous people, emphasizing harmony with nature, ancestral reverence, and community well-being. It serves as a place for traditional ceremonies rather than daily idol worship, focusing on a deep connection with the natural world and ancestral spirits.',
+                rituals: [
+                    {
+                        name: 'Nongkrem Dance (Ka Pomblang Syiem)',
+                        explanation: 'A vibrant five-day harvest festival and thanksgiving ceremony performed annually by the Khasi people. It involves propitiation to the ancestral deity and spirits for a bountiful harvest and prosperity. The unmarried girls perform the "Shad Kynthei" dance, while men, armed with swords, perform the "Shad Mastieh" to protect the community.',
+                        time: 'Varies, typically October/November (exact dates depend on the traditional calendar)',
+                        significance: 'Thanksgiving for harvest, seeking prosperity, ancestral veneration, and reinforcing community bonds.'
+                    },
+                    {
+                        name: 'Shad Suk Mynsiem (Dance of Joyful Hearts)',
+                        explanation: 'A public thanksgiving dance performed annually to express gratitude to the Almighty and seek blessings. It celebrates the Khasi way of life and community spirit, with both men and women participating in traditional attire, symbolizing the unity and joyous spirit of the community.',
+                        time: 'Varies, typically April (exact dates depend on the traditional calendar)',
+                        significance: 'Expression of gratitude, communal celebration, affirmation of cultural identity, and fostering peace and harmony.'
+                    }
+                ],
+                festivals: [
+                    {
+                        name: 'Nongkrem Dance (Ka Pomblang Syiem)',
+                        date: 'Late October / Early November (dates vary annually based on traditional Khasi calendar)',
+                        details: 'The most important traditional festival, focusing on elaborate rituals for the welfare of the community and a good harvest. Visitors can observe the unique dances, ritual sacrifices (though generally not for public viewing), and vibrant cultural expressions.'
+                    },
+                    {
+                        name: 'Shad Suk Mynsiem',
+                        date: 'April (dates vary annually based on traditional Khasi calendar)',
+                        details: 'A festival of public thanksgiving, where people from all walks of life gather to dance and celebrate the joy of life and community bonds. It is a spectacle of traditional attire, music, and dance.'
+                    }
+                ],
+                dailyRituals: [
+                    {
+                        name: 'Morning Contemplation & Offerings',
+                        time: 'Sunrise onwards',
+                        details: 'Individuals and families often visit the sacred groves or specific spots for quiet contemplation, offering betel nuts (kwai), leaves, and prayers to the natural spirits and ancestors, seeking blessings for the day. This is a personal and introspective practice.',
+                        significance: 'Connecting with nature, seeking inner peace, honoring spiritual entities, and beginning the day with positive intentions.'
+                    },
+                    {
+                        name: 'Ancestral Reverence',
+                        time: 'Throughout the day',
+                        details: 'While not a structured daily event with fixed timings, reverence for ancestors is a continuous practice ingrained in daily life. This often involves small personal offerings or silent prayers at designated family shrines or ancestral stones within the grove, acknowledging their enduring presence and guidance.',
+                        significance: 'Maintaining family ties, seeking wisdom and guidance from elders past, and ensuring the continuity of cultural traditions.'
+                    }
+                ],
+                dosAndDonts: {
+                    dos: [
+                        'Dress modestly, covering shoulders and knees, as a sign of respect for the sacred environment.',
+                        'Remove footwear before entering designated sacred areas or shrines, following local customs.',
+                        'Maintain silence and a respectful demeanor, especially during ceremonies or when in sacred zones.',
+                        'Seek permission from local elders or guides before taking photographs or recording videos, respecting privacy and sacredness.',
+                        'Follow the guidance of local elders or designated guides, as they are custodians of tradition.',
+                        'Show reverence for nature and the environment; these groves are considered living temples.'
+                    ],
+                    donts: [
+                        'Do not disturb the natural environment, including flora and fauna. These are integral to the spiritual ecosystem.',
+                        'Do not consume non-vegetarian food, alcohol, or tobacco within the sacred premises.',
+                        'Do not litter or leave any waste behind. Carry out what you carry in.',
+                        'Do not make loud noises or engage in boisterous behavior that may disrupt the peaceful atmosphere.',
+                        'Do not touch any artifacts, ritualistic items, or ancestral stones without explicit permission.',
+                        'Do not wear revealing clothing; modesty is highly valued in sacred spaces.'
+                    ]
+                }
+            },
+            {
+                id: 'shillong_kali',
+                name: 'Shillong Kali Temple (Example)',
+                description: 'A prominent Hindu temple located in Shillong, dedicated to Goddess Kali, a fierce manifestation of the Divine Mother. It is a significant pilgrimage site for devotees from across the region and attracts visitors seeking spiritual solace and cultural insights into Hindu worship practices.',
+                rituals: [
+                    {
+                        name: 'Daily Aarti (Lamp Ceremony)',
+                        explanation: 'A daily ritual of offering lamps, incense, and prayers to the deity. It is performed multiple times a day, typically at dawn, noon, and dusk, accompanied by devotional songs (bhajans) and chants (mantras). Aarti symbolizes the removal of darkness and the presence of divine light.',
+                        time: 'Morning: 6:00 AM, Noon: 12:00 PM, Evening: 7:00 PM',
+                        significance: 'Invocation of divine blessings, purification of the atmosphere, expressing devotion, and connecting with the deity through light and sound.'
+                    },
+                    {
+                        name: 'Puja (Worship Rituals)',
+                        explanation: 'Various forms of worship offered to the deity, including floral offerings, sacred water (abhishekam), food (prasad), and chanting of specific mantras. Devotees can request specific pujas for different intentions like health, prosperity, or peace.',
+                        time: 'Throughout the day (individual requests can be accommodated by priests)',
+                        significance: 'Seeking specific blessings, expressing devotion, spiritual purification, and accumulating spiritual merit.'
+                    }
+                ],
+                festivals: [
+                    {
+                        name: 'Durga Puja',
+                        date: 'September/October (dates vary annually based on the Hindu lunar calendar)',
+                        details: 'The grandest festival celebrating Goddess Durga, a form of Kali. The temple is elaborately decorated, and special pujas, cultural programs, and community feasts (Bhog) are organized over several days, drawing large crowds of devotees.'
+                    },
+                    {
+                        name: 'Kali Puja',
+                        date: 'October/November (on Amavasya Tithi of Kartik month, often coinciding with Diwali)',
+                        details: 'Dedicated specifically to Goddess Kali, involving midnight pujas, elaborate offerings, and special cultural performances. It is celebrated with immense fervor and devotion, particularly in the eastern parts of India.'
+                    },
+                    {
+                        name: 'Shivaratri',
+                        date: 'February/March (dates vary annually)',
+                        details: 'A festival dedicated to Lord Shiva, the consort of Goddess Kali. Special prayers and fasting are observed, with devotees staying awake through the night offering various sacred items to the deity.'
+                    }
+                ],
+                dailyRituals: [
+                    {
+                        name: 'Mangal Aarti',
+                        time: '6:00 AM',
+                        details: 'The first daily ritual at dawn to awaken the deity, performed with lamps, incense, and devotional songs. It signifies the beginning of the temple\'s daily activities.',
+                        significance: 'Beginning the day with divine blessings and invoking prosperity.'
+                    },
+                    {
+                        name: 'Bhog Aarti',
+                        time: '12:00 PM',
+                        details: 'Midday ritual where freshly cooked vegetarian food (Bhog) is offered to the deity as a gesture of gratitude and devotion. This consecrated food is later distributed as Prasad to devotees.',
+                        significance: 'Expressing gratitude, offering sustenance to the divine, and receiving blessings through consecrated food.'
+                    },
+                    {
+                        name: 'Sandhya Aarti',
+                        time: '7:00 PM',
+                        details: 'Evening ritual performed at dusk, marking the transition from day to night. It is a vibrant ceremony with multiple lamps, bells, and devotional hymns, signifying protection and peace.',
+                        significance: 'Seeking protection and blessings for the night, and concluding the day\'s worship.'
+                    }
+                ],
+                dosAndDonts: {
+                    dos: [
+                        'Dress modestly, covering shoulders and knees, out of respect for the sanctity of the temple.',
+                        'Remove footwear before entering the temple premises, a common practice in Hindu temples.',
+                        'Maintain silence and a respectful demeanor inside the temple, especially during prayers or rituals.',
+                        'Offer prayers and offerings (flowers, sweets, fruits) as per your faith, which can be purchased outside the temple.',
+                        'Respect the customs and traditions of the temple; observe how locals behave and follow suit.',
+                        'Seek blessings from the priests if desired, and they may provide guidance on rituals.'
+                    ],
+                    donts: [
+                        'Do not carry leather articles (belts, bags, wallets) into the inner sanctum of the temple.',
+                        'Do not consume non-vegetarian food, alcohol, or tobacco within the temple premises.',
+                        'Do not litter or deface the temple property. Use designated bins.',
+                        'Do not engage in loud conversations, arguments, or boisterous behavior.',
+                        'Do not disrupt ongoing pujas or ceremonies. Stand quietly and observe.',
+                        'Do not touch idols or sacred objects without explicit permission from a priest.'
+                    ]
+                }
+            }
+        ];
+
+        const templeSelect = document.getElementById('temple-select');
+        const descriptionText = document.querySelector('#temple-description .description-text');
+        const ritualsList = document.querySelector('#rituals-section .rituals-list');
+        const festivalsList = document.querySelector('#festivals-section .festivals-list');
+        const dailyRitualsList = document.querySelector('#daily-rituals-section .daily-rituals-list');
+        const dosList = document.querySelector('#dos-donts-section .dos-list');
+        const dontsList = document.querySelector('#dos-donts-section .donts-list');
+
+        function populateTempleSelect() {
+            temples.forEach(temple => {
+                const option = document.createElement('option');
+                option.value = temple.id;
+                option.textContent = temple.name;
+                templeSelect.appendChild(option);
+            });
+        }
+
+        function displayTempleDetails(templeId) {
+            const selectedTemple = temples.find(temple => temple.id === templeId);
+
+            if (!selectedTemple) {
+                // Clear content if no temple found, though should not happen with pre-populated data
+                descriptionText.textContent = 'No temple selected or found.';
+                ritualsList.innerHTML = '';
+                festivalsList.innerHTML = '';
+                dailyRitualsList.innerHTML = '';
+                dosList.innerHTML = '';
+                dontsList.innerHTML = '';
+                return;
+            }
+
+            // General Description
+            descriptionText.textContent = selectedTemple.description;
+
+            // Rituals
+            ritualsList.innerHTML = '';
+            selectedTemple.rituals.forEach(ritual => {
+                const ritualDiv = document.createElement('div');
+                ritualDiv.innerHTML = `
+                    <h3>${ritual.name}</h3>
+                    <p><strong>Time:</strong> ${ritual.time}</p>
+                    <p><strong>Significance:</strong> ${ritual.significance}</p>
+                    <p>${ritual.explanation}</p>
+                `;
+                ritualsList.appendChild(ritualDiv);
+            });
+
+            // Festivals
+            festivalsList.innerHTML = '';
+            selectedTemple.festivals.forEach(festival => {
+                const festivalDiv = document.createElement('div');
+                festivalDiv.innerHTML = `
+                    <h3>${festival.name}</h3>
+                    <p><strong>Date:</strong> ${festival.date}</p>
+                    <p>${festival.details}</p>
+                `;
+                festivalsList.appendChild(festivalDiv);
+            });
+
+            // Daily Rituals
+            dailyRitualsList.innerHTML = '';
+            selectedTemple.dailyRituals.forEach(daily => {
+                const dailyDiv = document.createElement('div');
+                dailyDiv.innerHTML = `
+                    <h3>${daily.name}</h3>
+                    <p><strong>Time:</strong> ${daily.time}</p>
+                    <p><strong>Significance:</strong> ${daily.significance}</p>
+                    <p>${daily.details}</p>
+                `;
+                dailyRitualsList.appendChild(dailyDiv);
+            });
+
+            // Dos and Don'ts
+            dosList.innerHTML = '';
+            selectedTemple.dosAndDonts.dos.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                dosList.appendChild(li);
+            });
+
+            dontsList.innerHTML = '';
+            selectedTemple.dosAndDonts.donts.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                dontsList.appendChild(li);
+            });
+        }
+
+        // Event Listener
+        templeSelect.addEventListener('change', (event) => {
+            displayTempleDetails(event.target.value);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            populateTempleSelect();
+            if (templeSelect.options.length > 0) {
+                // Select the first temple by default
+                templeSelect.value = temples[0].id;
+                displayTempleDetails(templeSelect.value);
+            }
+        });
+    </script>
+</body>
+</html>

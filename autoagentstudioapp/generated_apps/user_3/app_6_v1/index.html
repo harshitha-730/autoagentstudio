@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrant Travel Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6A11CB; /* Deep Purple */
+            --secondary-color: #2575FC; /* Bright Blue */
+            --accent-color-1: #FFD700; /* Gold */
+            --accent-color-2: #00C9FF; /* Sky Blue */
+            --background-gradient: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --text-light: #f4f4f4;
+            --text-dark: #333;
+            --card-bg: #ffffff;
+            --input-border: #ccc;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--background-gradient);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            margin: 30px 20px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            color: var(--text-dark);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+            align-items: center;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--input-border);
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.2);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--secondary-color), var(--accent-color-2));
+            color: var(--text-light);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px; /* Space between inputs and button */
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .results-section {
+            text-align: left;
+            margin-top: 40px;
+        }
+
+        .results-section h2 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent-color-1);
+            padding-bottom: 10px;
+        }
+
+        .category {
+            margin-bottom: 30px;
+        }
+
+        .category h3 {
+            color: var(--secondary-color);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .item-card {
+            background-color: var(--text-light);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure cards in a row have same height */
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .item-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-card-content {
+            padding: 20px;
+            flex-grow: 1; /* Allow content to grow and push to bottom */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-card h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 1.25em;
+            font-weight: 600;
+        }
+
+        .item-card p {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-weight: 600;
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 20px 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .input-section {
+                flex-direction: column;
+            }
+
+            .input-group {
+                max-width: none;
+            }
+
+            .results-section h2 {
+                font-size: 1.8em;
+            }
+
+            .category h3 {
+                font-size: 1.3em;
+            }
+
+            .item-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Vibrant Travel Planner ✨</h1>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="startLocation">Your Current Location:</label>
+                <input type="text" id="startLocation" placeholder="e.g., London" value="London">
+            </div>
+            <div class="input-group">
+                <label for="destination">Your Dream Destination:</label>
+                <input type="text" id="destination" placeholder="e.g., Paris" value="Paris">
+            </div>
+            <button id="planTripBtn">Plan My Vibrant Trip!</button>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <h2 id="resultsHeading"></h2>
+
+            <div id="hotels" class="category">
+                <h3>Hotels</h3>
+                <div class="item-grid" id="hotelsGrid">
+                    <!-- Hotels will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <div id="restaurants" class="category">
+                <h3>Restaurants</h3>
+                <div class="item-grid" id="restaurantsGrid">
+                    <!-- Restaurants will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <div id="places" class="category">
+                <h3>Places to Visit</h3>
+                <div class="item-grid" id="placesGrid">
+                    <!-- Places will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
+        <p id="errorMessage" class="error-message" style="display: none;"></p>
+    </div>
+
+    <script>
+        const planTripBtn = document.getElementById('planTripBtn');
+        const startLocationInput = document.getElementById('startLocation');
+        const destinationInput = document.getElementById('destination');
+        const resultsSection = document.getElementById('results');
+        const resultsHeading = document.getElementById('resultsHeading');
+        const hotelsGrid = document.getElementById('hotelsGrid');
+        const restaurantsGrid = document.getElementById('restaurantsGrid');
+        const placesGrid = document.getElementById('placesGrid');
+        const errorMessage = document.getElementById('errorMessage');
+
+        const mockTravelData = {
+            "paris": {
+                city: "Paris",
+                hotels: [
+                    { name: "The Ritz Paris", description: "Iconic luxury hotel in a historic palace, Place Vendôme.", image: "https://source.unsplash.com/random/400x300/?hotel,paris,luxury" },
+                    { name: "Hotel Le Littré", description: "Elegant 4-star hotel near Montparnasse, blending comfort and classic Parisian style.", image: "https://source.unsplash.com/random/400x300/?hotel,paris,boutique" },
+                    { name: "Shangri-La Paris", description: "Former home of Prince Roland Bonaparte, offering Eiffel Tower views.", image: "https://source.unsplash.com/random/400x300/?hotel,paris,eiffel" }
+                ],
+                restaurants: [
+                    { name: "Le Cinq", description: "Three Michelin stars at Four Seasons Hotel George V, serving refined French cuisine.", image: "https://source.unsplash.com/random/400x300/?restaurant,paris,michelin" },
+                    { name: "L'Ambroisie", description: "Three Michelin stars, known for classic French dishes and exquisite ingredients.", image: "https://source.unsplash.com/random/400x300/?restaurant,paris,frenchfood" },
+                    { name: "Pink Mamma", description: "Popular Italian restaurant in Pigalle, known for its vibrant decor and delicious pasta.", image: "https://source.unsplash.com/random/400x300/?restaurant,paris,italian" }
+                ],
+                places: [
+                    { name: "Eiffel Tower", description: "World-famous wrought-iron landmark offering breathtaking city views.", image: "https://source.unsplash.com/random/400x300/?eiffel,paris" },
+                    { name: "Louvre Museum", description: "Home to thousands of works of art, including the Mona Lisa.", image: "https://source.unsplash.com/random/400x300/?louvre,paris" },
+                    { name: "Notre-Dame Cathedral", description: "Historic Gothic cathedral, currently undergoing restoration.", image: "https://source.unsplash.com/random/400x300/?notredame,paris" },
+                    { name: "Arc de Triomphe", description: "Monument honoring those who fought for France, standing at the western end of the Champs-Élysées.", image: "https://source.unsplash.com/random/400x300/?arcdetriomphe,paris" }
+                ]
+            },
+            "tokyo": {
+                city: "Tokyo",
+                hotels: [
+                    { name: "Park Hyatt Tokyo", description: "Luxury hotel known for its stunning city views and elegant design.", image: "https://source.unsplash.com/random/400x300/?hotel,tokyo,luxury" },
+                    { name: "Imperial Hotel Tokyo", description: "Historic landmark hotel offering exceptional service and prime location.", image: "https://source.unsplash.com/random/400x300/?hotel,tokyo,classic" },
+                    { name: "Mandarin Oriental Tokyo", description: "Contemporary luxury with panoramic city views and acclaimed dining.", image: "https://source.unsplash.com/random/400x300/?hotel,tokyo,modern" }
+                ],
+                restaurants: [
+                    { name: "Sukiyabashi Jiro", description: "World-renowned sushi restaurant led by master Jiro Ono, featured in 'Jiro Dreams of Sushi'.", image: "https://source.unsplash.com/random/400x300/?sushi,tokyo,restaurant" },
+                    { name: "Narisawa", description: "Innovative Satoyama cuisine, focusing on nature and sustainability.", image: "https://source.unsplash.com/random/400x300/?narisawa,tokyo,food" },
+                    { name: "Afuri Ramen", description: "Popular for its Yuzu Shio Ramen, a refreshing twist on classic ramen.", image: "https://source.unsplash.com/random/400x300/?ramen,tokyo,afuri" }
+                ],
+                places: [
+                    { name: "Shibuya Crossing", description: "One of the world's busiest intersections, an iconic symbol of Tokyo.", image: "https://source.unsplash.com/random/400x300/?shibuya,tokyo" },
+                    { name: "Senso-ji Temple", description: "Tokyo's oldest temple in Asakusa, featuring a vibrant Nakamise-dori market.", image: "https://source.unsplash.com/random/400x300/?sensoji,tokyo" },
+                    { name: "Tokyo Skytree", description: "Broadcasting and observation tower, offering incredible views from its two observation decks.", image: "https://source.unsplash.com/random/400x300/?skytree,tokyo" },
+                    { name: "Meiji Jingu Shrine", description: "Shinto shrine dedicated to Emperor Meiji and Empress Shoken, surrounded by a serene forest.", image: "https://source.unsplash.com/random/400x300/?meijijingu,tokyo" }
+                ]
+            },
+            "new york": {
+                city: "New York",
+                hotels: [
+                    { name: "The Plaza Hotel", description: "Iconic luxury hotel in Manhattan, overlooking Central Park and Grand Army Plaza.", image: "https://source.unsplash.com/random/400x300/?hotel,newyork,luxury" },
+                    { name: "Archer Hotel New York", description: "Boutique hotel in Midtown, offering stylish rooms and a rooftop bar with Empire State Building views.", image: "https://source.unsplash.com/random/400x300/?hotel,newyork,boutique" },
+                    { name: "The Standard, High Line", description: "Trendy hotel perched above the High Line, known for its modern design and lively atmosphere.", image: "https://source.unsplash.com/random/400x300/?hotel,newyork,highline" }
+                ],
+                restaurants: [
+                    { name: "Per Se", description: "Thomas Keller's renowned fine dining restaurant with three Michelin stars, offering American and French cuisine.", image: "https://source.unsplash.com/random/400x300/?perse,newyork,restaurant" },
+                    { name: "Katz's Delicatessen", description: "Historic deli famous for its pastrami sandwiches and classic New York vibe.", image: "https://source.unsplash.com/random/400x300/?katz,newyork,deli" },
+                    { name: "Gramercy Tavern", description: "Beloved American restaurant offering seasonal menus in a sophisticated setting.", image: "https://source.unsplash.com/random/400x300/?gramercy,newyork,food" }
+                ],
+                places: [
+                    { name: "Statue of Liberty", description: "Neoclassical sculpture on Liberty Island, a symbol of freedom and democracy.", image: "https://source.unsplash.com/random/400x300/?statueofliberty,newyork" },
+                    { name: "Central Park", description: "An urban oasis in Manhattan, offering vast green spaces, lakes, and walking paths.", image: "https://source.unsplash.com/random/400x300/?centralpark,newyork" },
+                    { name: "Times Square", description: "Major commercial intersection, known for its dazzling billboards and entertainment.", image: "https://source.unsplash.com/random/400x300/?timessquare,newyork" },
+                    { name: "Brooklyn Bridge", description: "Historic suspension bridge connecting Manhattan and Brooklyn, offering iconic skyline views.", image: "https://source.unsplash.com/random/400x300/?brooklynbridge,newyork" }
+                ]
+            },
+            "rome": {
+                city: "Rome",
+                hotels: [
+                    { name: "Hotel Artemide", description: "Elegant hotel near Termini Station, with a rooftop terrace and spa.", image: "https://source.unsplash.com/random/400x300/?hotel,rome,modern" },
+                    { name: "Hotel Eden", description: "Luxury Dorchester Collection hotel near Villa Borghese, offering exquisite dining.", image: "https://source.unsplash.com/random/400x300/?hotel,rome,luxury" }
+                ],
+                restaurants: [
+                    { name: "Roscioli Salumeria con Cucina", description: "Famous for traditional Roman dishes and a gourmet deli selection.", image: "https://source.unsplash.com/random/400x300/?restaurant,rome,italian" },
+                    { name: "Armando al Pantheon", description: "Classic Roman trattoria known for authentic pasta dishes.", image: "https://source.unsplash.com/random/400x300/?restaurant,rome,pasta" }
+                ],
+                places: [
+                    { name: "Colosseum", description: "Ancient amphitheatre, the largest ever built, iconic symbol of Imperial Rome.", image: "https://source.unsplash.com/random/400x300/?colosseum,rome" },
+                    { name: "Roman Forum", description: "Ancient marketplace and center of Roman public life.", image: "https://source.unsplash.com/random/400x300/?romanforum,rome" },
+                    { name: "Trevi Fountain", description: "Baroque fountain, one of the most famous in the world; toss a coin for good luck!", image: "https://source.unsplash.com/random/400x300/?trevifountain,rome" },
+                    { name: "Pantheon", description: "Former Roman temple, now a church, renowned for its architectural grandeur.", image: "https://source.unsplash.com/random/400x300/?pantheon,rome" }
+                ]
+            }
+        };
+
+        function createItemCard(item) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+
+            const img = document.createElement('img');
+            img.src = item.image;
+            img.alt = item.name;
+
+            const content = document.createElement('div');
+            content.className = 'item-card-content';
+
+            const title = document.createElement('h4');
+            title.textContent = item.name;
+
+            const description = document.createElement('p');
+            description.textContent = item.description;
+
+            content.appendChild(title);
+            content.appendChild(description);
+            card.appendChild(img);
+            card.appendChild(content);
+
+            return card;
+        }
+
+        function displayTravelPlan(plan) {
+            hotelsGrid.innerHTML = '';
+            restaurantsGrid.innerHTML = '';
+            placesGrid.innerHTML = '';
+
+            if (!plan || (plan.hotels.length === 0 && plan.restaurants.length === 0 && plan.places.length === 0)) {
+                errorMessage.textContent = `Sorry, no detailed plan available for ${plan.city || 'this destination'} yet. Try Paris, Tokyo, New York, or Rome!`;
+                errorMessage.style.display = 'block';
+                resultsSection.style.display = 'none';
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            resultsSection.style.display = 'block';
+            resultsHeading.textContent = `Your Vibrant Trip to ${plan.city}!`;
+
+            plan.hotels.forEach(hotel => {
+                hotelsGrid.appendChild(createItemCard(hotel));
+            });
+            plan.restaurants.forEach(restaurant => {
+                restaurantsGrid.appendChild(createItemCard(restaurant));
+            });
+            plan.places.forEach(place => {
+                placesGrid.appendChild(createItemCard(place));
+            });
+        }
+
+        planTripBtn.addEventListener('click', () => {
+            const startLocation = startLocationInput.value.trim();
+            const destination = destinationInput.value.trim().toLowerCase();
+
+            if (!destination) {
+                errorMessage.textContent = 'Please enter a destination to plan your trip.';
+                errorMessage.style.display = 'block';
+                resultsSection.style.display = 'none';
+                return;
+            }
+
+            const plan = mockTravelData[destination];
+
+            if (plan) {
+                displayTravelPlan(plan);
+            } else {
+                errorMessage.textContent = `Sorry, we don't have a detailed plan for "${destinationInput.value}" yet. Try Paris, Tokyo, New York, or Rome!`;
+                errorMessage.style.display = 'block';
+                resultsSection.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

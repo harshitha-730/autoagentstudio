@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AutoAgent Studio</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --border: #1f2937;
+            --text: #f9fafb;
+            --muted: #94a3b8;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --danger: #dc2626;
+            --danger-bg: #450a0a;
+            --success: #16a34a;
+            --success-bg: #052e16;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 50%);
+            color: var(--text);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: min(100%, 440px);
+            background: rgba(17, 24, 39, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(4px);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .notification {
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 0.92rem;
+        }
+
+        .notification.success {
+            background: var(--success-bg);
+            color: #86efac;
+            border: 1px solid #166534;
+        }
+
+        .notification.error {
+            background: var(--danger-bg);
+            color: #fca5a5;
+            border: 1px solid #7f1d1d;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: #0b1220;
+            color: var(--text);
+            margin-bottom: 14px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 11px 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        .meta {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .meta a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>AutoAgent Studio</h1>
+        <p class="subtitle">Sign in to manage and generate your apps.</p>
+
+        {% if notification %}
+            <div class="notification {{ notification.level }}">{{ notification.message }}</div>
+        {% endif %}
+
+        <form method="post" action="/login">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="meta">New user? <a href="/register">Create an account</a></p>
+    </main>
+</body>
+</html>

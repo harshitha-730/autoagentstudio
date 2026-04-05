@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | AutoAgent Studio</title>
+    <style>
+        :root {
+            --bg-1: #1e1b4b;
+            --bg-2: #0f3d5e;
+            --bg-3: #0f5132;
+            --text: #f8fafc;
+            --muted: #d1d5db;
+            --glass: rgba(10, 16, 36, 0.78);
+            --border: rgba(255, 255, 255, 0.2);
+            --card-a: #f97316;
+            --card-b: #22d3ee;
+            --card-c: #a78bfa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 8% 8%, #fb7185 0%, transparent 24%),
+                radial-gradient(circle at 90% 6%, #38bdf8 0%, transparent 25%),
+                radial-gradient(circle at 84% 84%, #4ade80 0%, transparent 24%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+            background-attachment: fixed;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 14px clamp(14px, 4vw, 34px);
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 12, 28, 0.72);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff7ed;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 0.85rem;
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, #f97316, #db2777);
+        }
+
+        .container {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+            padding: 26px clamp(14px, 4vw, 34px) 32px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.3rem, 3vw, 2rem);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin: 0 0 16px;
+        }
+
+        .notification {
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: rgba(37, 99, 235, 0.5);
+            color: #e0e7ff;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--glass);
+            padding: 14px;
+        }
+
+        .stat h3 {
+            margin: 0;
+            font-size: 1.55rem;
+        }
+
+        .stat p {
+            margin: 3px 0 0;
+            color: #bfdbfe;
+            font-size: 0.86rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .card {
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.28);
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.04);
+        }
+
+        .card.generate {
+            background: linear-gradient(135deg, var(--card-a), #ea580c);
+        }
+
+        .card.apps {
+            background: linear-gradient(135deg, var(--card-b), #0ea5e9);
+        }
+
+        .card.about {
+            background: linear-gradient(135deg, var(--card-c), #7c3aed);
+        }
+
+        .card h2 {
+            margin: 0 0 6px;
+            font-size: 1.06rem;
+        }
+
+        .card p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <header class="nav">
+        <div class="brand">AutoAgent Studio 🤖</div>
+        <nav class="nav-links">
+            <a class="active" href="/dashboard">Home</a>
+            <a href="/generate-studio">Generation Studio</a>
+            <a href="/apps-studio">Created Apps Studio</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>Hello, {{ user.name }} 👋</h1>
+        <p class="subtitle">Welcome to AutoAgent Studio. Choose where you want to work.</p>
+
+        {% if notification %}
+            <div class="notification">{{ notification.message }}</div>
+        {% endif %}
+
+        <section class="stats">
+            <article class="stat">
+                <h3>{{ total_apps }}</h3>
+                <p>Total apps created</p>
+            </article>
+            <article class="stat">
+                <h3>{% if latest_app %}v{{ latest_app.version_number }}{% else %}--{% endif %}</h3>
+                <p>Latest app version</p>
+            </article>
+            <article class="stat">
+                <h3>{% if latest_app %}{{ latest_app.app_name }}{% else %}No app yet{% endif %}</h3>
+                <p>Most recent app</p>
+            </article>
+        </section>
+
+        <section class="cards">
+            <a class="card generate" href="/generate-studio">
+                <h2>🚀 Generation Studio</h2>
+                <p>Create new apps, edit prompts, and re-run versions with AI generation.</p>
+            </a>
+            <a class="card apps" href="/apps-studio">
+                <h2>🗂️ Created Apps Studio</h2>
+                <p>Browse all your generated apps, search history, download ZIPs, and open full-screen previews.</p>
+            </a>
+            <a class="card about" href="/generate-studio">
+                <h2>✨ Start Building</h2>
+                <p>Jump directly to app generation and launch your ideas into a full-screen experience.</p>
+            </a>
+        </section>
+    </main>
+</body>
+</html>

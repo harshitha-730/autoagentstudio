@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generation Studio | AutoAgent Studio</title>
+    <style>
+        :root {
+            --bg-1: #3b0764;
+            --bg-2: #0f172a;
+            --bg-3: #065f46;
+            --text: #f8fafc;
+            --muted: #d1d5db;
+            --glass: rgba(8, 13, 28, 0.78);
+            --border: rgba(255, 255, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 10% 12%, #fb7185 0%, transparent 24%),
+                radial-gradient(circle at 90% 8%, #38bdf8 0%, transparent 26%),
+                radial-gradient(circle at 82% 88%, #34d399 0%, transparent 24%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+            background-attachment: fixed;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 14px clamp(14px, 4vw, 34px);
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 12, 28, 0.72);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand { font-weight: 700; }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff7ed;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 0.85rem;
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, #f97316, #db2777);
+        }
+
+        .container {
+            width: min(1200px, 100%);
+            margin: 0 auto;
+            padding: 24px clamp(14px, 4vw, 34px) 34px;
+            display: grid;
+            gap: 14px;
+            grid-template-columns: 1.15fr 0.85fr;
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--glass);
+            padding: 16px;
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+        }
+
+        .panel h1, .panel h2 {
+            margin: 0 0 8px;
+        }
+
+        .panel p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .notification,
+        .status {
+            display: none;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .notification.visible,
+        .status.visible {
+            display: block;
+        }
+
+        .notification.success,
+        .status.success {
+            background: #14532d;
+            color: #bbf7d0;
+            border-color: rgba(187, 247, 208, 0.45);
+        }
+
+        .notification.error,
+        .status.error {
+            background: #7f1d1d;
+            color: #fecaca;
+            border-color: rgba(254, 202, 202, 0.45);
+        }
+
+        .status.info {
+            background: #1d4ed8;
+            color: #dbeafe;
+            border-color: rgba(219, 234, 254, 0.45);
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            color: #fbcfe8;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 12px;
+            background: rgba(10, 15, 34, 0.85);
+            color: #fff;
+            padding: 10px 12px;
+            font-size: 0.94rem;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #fef08a;
+            box-shadow: 0 0 0 3px rgba(254, 240, 138, 0.22);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        button,
+        .action-link {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #22d3ee, #6366f1);
+            color: #fff;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(254, 240, 138, 0.45);
+            background: rgba(120, 53, 15, 0.45);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .loading.visible { display: flex; }
+
+        .spinner {
+            font-size: 1.6rem;
+            animation: spin 1.2s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            border: 1px solid rgba(167, 243, 208, 0.45);
+            background: rgba(5, 46, 22, 0.52);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .result.visible { display: block; }
+
+        .preview-shell {
+            margin-top: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(2, 6, 23, 0.88);
+            min-height: 340px;
+        }
+
+        .preview-shell iframe {
+            width: 100%;
+            height: 62vh;
+            min-height: 340px;
+            border: 0;
+            display: block;
+            background: #0b1220;
+        }
+
+        details {
+            margin-top: 10px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        details summary {
+            padding: 9px 11px;
+            background: rgba(20, 26, 56, 0.92);
+            color: #fef08a;
+            cursor: pointer;
+            font-size: 0.88rem;
+        }
+
+        details pre {
+            margin: 0;
+            background: #020617;
+            color: #a7f3d0;
+            max-height: 280px;
+            overflow: auto;
+            padding: 11px;
+            font-size: 0.77rem;
+            line-height: 1.4;
+        }
+
+        .recent-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .recent-item {
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(15, 23, 42, 0.78);
+            border-radius: 11px;
+            padding: 10px;
+        }
+
+        .recent-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .recent-meta {
+            font-size: 0.78rem;
+            color: #bfdbfe;
+            margin-bottom: 8px;
+        }
+
+        .recent-actions a {
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.78rem;
+            color: #fff7ed;
+            background: rgba(234, 88, 12, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 8px;
+            padding: 5px 8px;
+            margin-right: 6px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 960px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav">
+        <div class="brand">AutoAgent Studio 🤖</div>
+        <nav class="nav-links">
+            <a href="/dashboard">Home</a>
+            <a class="active" href="/generate-studio">Generation Studio</a>
+            <a href="/apps-studio">Created Apps Studio</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="panel">
+            <h1>Generation Studio 🚀</h1>
+            <p>Build a fresh app or continue from an older version prompt.</p>
+
+            <div
+                id="notificationBanner"
+                class="notification {% if notification %}visible {{ notification.level }}{% endif %}"
+            >
+                {% if notification %}{{ notification.message }}{% endif %}
+            </div>
+
+            <label for="appNameInput">App Name (optional) 🏷️</label>
+            <input
+                id="appNameInput"
+                type="text"
+                placeholder="Example: Travel Planner"
+                value="{% if selected_app %}{{ selected_app.app_name }}{% endif %}"
+            >
+
+            <label for="promptInput">Prompt 💡</label>
+            <textarea id="promptInput" placeholder="Describe the app...">{% if selected_app %}{{ selected_app.prompt }}{% endif %}</textarea>
+
+            <input id="sourceAppId" type="hidden" value="{% if selected_app %}{{ selected_app.id }}{% endif %}">
+
+            <div class="row">
+                <button id="generateBtn" class="btn-primary" type="button" onclick="generateApp()">Generate App 🚀</button>
+                <button class="btn-secondary" type="button" onclick="resetRerunState()">Start New 🧼</button>
+                <a class="action-link btn-secondary" href="/apps-studio">Go to Apps Studio 🗂️</a>
+            </div>
+
+            <div id="loadingBox" class="loading" aria-live="polite">
+                <div class="spinner">🌀</div>
+                <div>
+                    <div style="font-weight:700; color:#fde68a;">AI agents are generating your app...</div>
+                    <div id="loadingFact" style="font-size:0.84rem; color:#fecdd3;">Fun fact: agentic workflows can chain planning and execution in one loop.</div>
+                </div>
+            </div>
+
+            <div id="statusBox" class="status"></div>
+
+            <section id="outputSection" class="result">
+                <div style="margin-bottom:8px; font-weight:700;">Your app is ready 🎉</div>
+                <div class="row">
+                    <a id="openFullScreenLink" class="action-link btn-primary" href="#" target="_blank" rel="noopener">Open Full-Screen App 🚀</a>
+                    <a id="latestDownloadLink" class="action-link btn-secondary" href="#">Download ZIP 📦</a>
+                    <a class="action-link btn-secondary" href="/apps-studio">View in Apps Studio</a>
+                </div>
+                <div class="preview-shell">
+                    <iframe id="inlinePreviewFrame" title="Generated App Preview" loading="lazy"></iframe>
+                </div>
+                <details>
+                    <summary>View Generated Code 🧾</summary>
+                    <pre id="codeOutput"></pre>
+                </details>
+            </section>
+        </section>
+
+        <aside class="panel">
+            <h2>Quick Re-run Sources ✏️</h2>
+            <p>Jump from recent apps to prefill prompt and generate a new version.</p>
+
+            {% if recent_apps %}
+                <div class="recent-list">
+                    {% for app in recent_apps %}
+                        <div class="recent-item">
+                            <div class="recent-title">{{ app.app_name }} (v{{ app.version_number }})</div>
+                            <div class="recent-meta">{{ app.created_at.strftime("%Y-%m-%d %H:%M:%S") if app.created_at else "N/A" }}</div>
+                            <div class="recent-actions">
+                                <a href="/generate-studio?source_app_id={{ app.id }}">Edit &amp; Re-run</a>
+                                <a href="/apps/{{ app.id }}/view" target="_blank" rel="noopener">Full Screen</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="color:#fbcfe8; font-size:0.9rem;">No apps created yet.</div>
+            {% endif %}
+        </aside>
+    </main>
+
+    <script>
+        const promptInput = document.getElementById("promptInput");
+        const appNameInput = document.getElementById("appNameInput");
+        const sourceAppIdInput = document.getElementById("sourceAppId");
+        const generateBtn = document.getElementById("generateBtn");
+        const loadingBox = document.getElementById("loadingBox");
+        const loadingFact = document.getElementById("loadingFact");
+        const statusBox = document.getElementById("statusBox");
+        const banner = document.getElementById("notificationBanner");
+        const outputSection = document.getElementById("outputSection");
+        const codeOutput = document.getElementById("codeOutput");
+        const openFullScreenLink = document.getElementById("openFullScreenLink");
+        const latestDownloadLink = document.getElementById("latestDownloadLink");
+        const inlinePreviewFrame = document.getElementById("inlinePreviewFrame");
+
+        const facts = [
+            "Fun fact: agentic systems can adapt next actions from intermediate results.",
+            "Fun fact: structured prompts often reduce retries and improve output quality.",
+            "Fun fact: app versioning lets you experiment without losing old outputs.",
+            "Fun fact: multi-step reasoning allows AI to refine output before returning.",
+            "Fun fact: combining tools + memory enables richer autonomous workflows."
+        ];
+
+        let factTimer = null;
+        let factIndex = 0;
+
+        function setStatus(message, level) {
+            statusBox.textContent = message;
+            statusBox.className = "status visible " + level;
+        }
+
+        function clearStatus() {
+            statusBox.textContent = "";
+            statusBox.className = "status";
+        }
+
+        function showNotification(message, level) {
+            banner.textContent = message;
+            banner.className = "notification visible " + level;
+        }
+
+        function startFacts() {
+            factIndex = 0;
+            loadingFact.textContent = facts[0];
+            stopFacts();
+            factTimer = setInterval(() => {
+                factIndex = (factIndex + 1) % facts.length;
+                loadingFact.textContent = facts[factIndex];
+            }, 2300);
+        }
+
+        function stopFacts() {
+            if (factTimer) {
+                clearInterval(factTimer);
+                factTimer = null;
+            }
+        }
+
+        function setGeneratingState(isGenerating) {
+            generateBtn.disabled = isGenerating;
+            generateBtn.textContent = isGenerating ? "Generating Magic... ✨" : "Generate App 🚀";
+            if (isGenerating) {
+                loadingBox.classList.add("visible");
+                startFacts();
+            } else {
+                loadingBox.classList.remove("visible");
+                stopFacts();
+            }
+        }
+
+        function resetRerunState() {
+            sourceAppIdInput.value = "";
+            promptInput.value = "";
+            appNameInput.value = "";
+            outputSection.classList.remove("visible");
+            codeOutput.textContent = "";
+            inlinePreviewFrame.removeAttribute("src");
+            setStatus("Ready for a brand new app 🌈", "info");
+        }
+
+        async function generateApp() {
+            const prompt = promptInput.value.trim();
+            const appName = appNameInput.value.trim();
+            const sourceAppId = sourceAppIdInput.value.trim();
+
+            if (!prompt) {
+                setStatus("Please enter a prompt first.", "error");
+                return;
+            }
+
+            clearStatus();
+            setGeneratingState(true);
+            setStatus("Generating your app now... 🤖", "info");
+
+            const payload = { prompt: prompt };
+            if (appName) payload.app_name = appName;
+            if (sourceAppId) payload.source_app_id = Number(sourceAppId);
+
+            try {
+                const response = await fetch("/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if (!data.success) {
+                    showNotification(data.error || "Unable to generate app.", "error");
+                    setStatus(data.error || "Unable to generate app.", "error");
+                    return;
+                }
+
+                outputSection.classList.add("visible");
+                codeOutput.textContent = data.code || "";
+                sourceAppIdInput.value = data.app ? String(data.app.id) : sourceAppIdInput.value;
+
+                const previewUrl = data.app?.preview_url || (data.app ? `/apps/${data.app.id}/view` : "#");
+                const downloadUrl = data.app?.download_url || (data.app ? `/apps/${data.app.id}/download` : "#");
+                openFullScreenLink.href = previewUrl;
+                latestDownloadLink.href = downloadUrl;
+                inlinePreviewFrame.src = previewUrl;
+
+                showNotification(data.notification || "App created successfully 🎉", "success");
+                setStatus("Done! Click 'Open Full-Screen App' to view it.", "success");
+            } catch (error) {
+                showNotification("Connection error. Please try again.", "error");
+                setStatus("Connection error. Please try again.", "error");
+            } finally {
+                setGeneratingState(false);
+            }
+        }
+
+        // Ensure older cached prompts do not persist across refresh anymore.
+        localStorage.removeItem("autoagent_last_prompt");
+        localStorage.removeItem("autoagent_last_app_name");
+    </script>
+</body>
+</html>

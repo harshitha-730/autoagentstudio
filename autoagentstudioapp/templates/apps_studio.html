@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Created Apps Studio | AutoAgent Studio</title>
+    <style>
+        :root {
+            --bg-1: #111827;
+            --bg-2: #0f766e;
+            --bg-3: #4c1d95;
+            --text: #f8fafc;
+            --muted: #d1d5db;
+            --glass: rgba(7, 14, 28, 0.78);
+            --border: rgba(255, 255, 255, 0.2);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 10% 8%, #f97316 0%, transparent 22%),
+                radial-gradient(circle at 90% 10%, #06b6d4 0%, transparent 24%),
+                radial-gradient(circle at 84% 84%, #a78bfa 0%, transparent 22%),
+                linear-gradient(135deg, var(--bg-1), var(--bg-2) 46%, var(--bg-3));
+            background-attachment: fixed;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 14px clamp(14px, 4vw, 34px);
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 12, 28, 0.72);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .brand { font-weight: 700; }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #fff7ed;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 0.85rem;
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, #0ea5e9, #22c55e);
+        }
+
+        .container {
+            width: min(1200px, 100%);
+            margin: 0 auto;
+            padding: 24px clamp(14px, 4vw, 34px) 34px;
+        }
+
+        .panel {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--glass);
+            padding: 16px;
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.25rem, 3vw, 1.9rem);
+        }
+
+        .subtitle {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .notification {
+            margin-bottom: 12px;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(37, 99, 235, 0.5);
+            color: #dbeafe;
+        }
+
+        .search {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search input {
+            flex: 1;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(10, 15, 34, 0.85);
+            color: #fff;
+            padding: 10px 12px;
+            outline: none;
+        }
+
+        .search button {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 13px;
+            background: linear-gradient(90deg, #22d3ee, #3b82f6);
+            color: #082f49;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .toolbar {
+            margin-bottom: 12px;
+        }
+
+        .toolbar a {
+            text-decoration: none;
+            border-radius: 10px;
+            padding: 9px 12px;
+            background: linear-gradient(90deg, #f59e0b, #f97316);
+            color: #fff;
+            display: inline-block;
+            font-size: 0.88rem;
+        }
+
+        .empty-state {
+            border: 1px dashed rgba(255, 255, 255, 0.32);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            color: #fbcfe8;
+            font-size: 0.92rem;
+            background: rgba(88, 28, 135, 0.2);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        table {
+            width: 100%;
+            min-width: 840px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.88rem;
+            vertical-align: top;
+        }
+
+        th {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: rgba(3, 7, 18, 0.9);
+            color: #fef08a;
+        }
+
+        .prompt-preview {
+            max-width: 380px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #e2e8f0;
+        }
+
+        .version {
+            color: #93c5fd;
+            font-size: 0.82rem;
+            margin-left: 4px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .actions a {
+            text-decoration: none;
+            border-radius: 9px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            padding: 7px 9px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .rerun {
+            background: rgba(234, 88, 12, 0.65);
+            color: #fff7ed;
+        }
+
+        .view {
+            background: rgba(34, 197, 94, 0.35);
+            color: #dcfce7;
+        }
+
+        .zip {
+            background: rgba(14, 165, 233, 0.4);
+            color: #e0f2fe;
+        }
+
+        @media (max-width: 720px) {
+            .search {
+                flex-direction: column;
+            }
+            .search button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav">
+        <div class="brand">AutoAgent Studio 🤖</div>
+        <nav class="nav-links">
+            <a href="/dashboard">Home</a>
+            <a href="/generate-studio">Generation Studio</a>
+            <a class="active" href="/apps-studio">Created Apps Studio</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="panel">
+            <h1>Created Apps Studio 🗂️</h1>
+            <p class="subtitle">Search your history and move between generation, preview, and download flows.</p>
+
+            {% if notification %}
+                <div class="notification">{{ notification.message }}</div>
+            {% endif %}
+
+            <div class="toolbar">
+                <a href="/generate-studio">Create New App 🚀</a>
+            </div>
+
+            <form class="search" method="get" action="/apps-studio">
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search by app name or prompt keywords"
+                    value="{{ search_query }}"
+                >
+                <button type="submit">Search 🔍</button>
+            </form>
+
+            {% if not apps %}
+                <div class="empty-state">
+                    {% if search_query %}No matching apps found 😅{% else %}No apps created yet{% endif %}
+                </div>
+            {% else %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>App</th>
+                                <th>Prompt</th>
+                                <th>Date and Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in apps %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ app.app_name }}</strong>
+                                        <span class="version">(v{{ app.version_number }})</span>
+                                    </td>
+                                    <td class="prompt-preview">
+                                        {{ app.prompt[:130] }}{% if app.prompt|length > 130 %}...{% endif %}
+                                    </td>
+                                    <td>{{ app.created_at.strftime("%Y-%m-%d %H:%M:%S") if app.created_at else "N/A" }}</td>
+                                    <td>
+                                        <div class="actions">
+                                            <a class="rerun" href="/generate-studio?source_app_id={{ app.id }}">✏️ Edit &amp; Re-run</a>
+                                            <a class="view" href="/apps/{{ app.id }}/view" target="_blank" rel="noopener">🚀 Full Screen</a>
+                                            <a class="zip" href="/apps/{{ app.id }}/download">📦 ZIP</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

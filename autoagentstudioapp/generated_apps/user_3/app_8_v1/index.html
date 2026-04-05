@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 College Library Management</title>
+    <style>
+        /* Basic Reset & Variables */
+        :root {
+            --primary-color: #6a0572; /* Deep Purple */
+            --secondary-color: #9c27b0; /* Lighter Purple */
+            --accent-color: #e040fb; /* Bright Pink */
+            --text-color: #333;
+            --light-text-color: #f8f8f8;
+            --background-color: #f0f2f5; /* Light Gray */
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            padding: 30px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background-color: var(--accent-color);
+            box-shadow: 0 6px 15px rgba(224, 64, 251, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .section {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(224, 64, 251, 0.2);
+        }
+
+        .btn {
+            background-color: var(--success-color);
+            color: var(--light-text-color);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: #42a446;
+            transform: translateY(-2px);
+        }
+
+        .btn.btn-issue {
+            background-color: var(--warning-color);
+        }
+        .btn.btn-issue:hover {
+            background-color: #e68a00;
+        }
+
+        .btn.btn-return {
+            background-color: var(--primary-color);
+        }
+        .btn.btn-return:hover {
+            background-color: #5b0460;
+        }
+
+        /* Table Styling */
+        .book-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px; /* Space between rows */
+            margin-top: 20px;
+        }
+
+        .book-table th {
+            background-color: var(--primary-color);
+            color: var(--light-text-color);
+            font-weight: 700;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 15px;
+            text-align: left;
+        }
+        .book-table thead tr {
+            border-radius: 8px;
+            overflow: hidden; /* Ensures border-radius applies to child th elements */
+            display: table; /* Fix for overflow: hidden on tr */
+            width: 100%; /* Fix for display: table */
+            table-layout: fixed; /* Fix for display: table */
+        }
+        .book-table th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+        .book-table th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+        .book-table tbody tr {
+            background-color: var(--card-background);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 8px; /* Apply border-radius to the row */
+            overflow: hidden; /* Crucial for border-radius to work with child cells */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: table; /* Fix for overflow: hidden on tr */
+            width: 100%; /* Fix for display: table */
+            table-layout: fixed; /* Fix for display: table */
+        }
+
+        .book-table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .book-table tbody tr.issued-book-row {
+            background-color: #ffebee; /* Light red for issued books */
+        }
+        .book-table tbody tr.issued-book-row td {
+            color: #555; /* Slightly darker text for issued books */
+        }
+
+
+        .book-table td {
+            padding: 15px;
+            border: none; /* Remove borders on individual cells */
+        }
+
+        /* Specific styling for action buttons in table */
+        .book-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            margin: 0 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--light-text-color);
+            text-transform: uppercase;
+        }
+
+        .status-available {
+            background-color: var(--success-color);
+        }
+
+        .status-issued {
+            background-color: var(--warning-color);
+        }
+
+    </style>
+<style id="aas-fullscreen-base">
+          html, body { margin: 0; min-height: 100%; width: 100%; }
+          body { min-height: 100vh; }
+        </style></head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Library Book Hub 🎓</h1>
+            <p>Manage college books with ease and a splash of color! ✨</p>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" data-section="inventory">All Books 📖</button>
+            <button class="nav-btn" data-section="available">Available Books ✅</button>
+            <button class="nav-btn" data-section="add-book">Add New Book ➕</button>
+            <button class="nav-btn" data-section="issued">Issued Books 🚀</button>
+        </nav>
+
+        <main id="content-area">
+            <!-- Inventory Section -->
+            <section id="inventory-section" class="section active">
+                <h2>📚 Full Inventory </h2>
+                <input type="text" id="search-input" placeholder="🔍 Search by title, author, or ISBN..." style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1em;">
+                <table class="book-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Status</th>
+                            <th>Issued To</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="book-list-body">
+                        <!-- Books will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Available Books Section -->
+            <section id="available-section" class="section">
+                <h2>✅ Available for Checkout</h2>
+                <table class="book-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="available-list-body">
+                        <!-- Available books will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Add Book Section -->
+            <section id="add-book-section" class="section">
+                <h2>➕ Add a New Book</h2>
+                <form id="add-book-form">
+                    <div class="form-group">
+                        <label for="book-title">Book Title:</label>
+                        <input type="text" id="book-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-author">Author:</label>
+                        <input type="text" id="book-author" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-isbn">ISBN:</label>
+                        <input type="text" id="book-isbn" required>
+                    </div>
+                    <button type="submit" class="btn">Add Book 🎉</button>
+                </form>
+            </section>
+
+            <!-- Issued Books Section -->
+            <section id="issued-section" class="section">
+                <h2>🚀 Currently Issued Books</h2>
+                <table class="book-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Issued To</th>
+                            <th>Issue Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="issued-list-body">
+                        <!-- Issued books will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'libraryBooks';
+        let books = [];
+
+        // DOM Elements
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.section');
+        const addBookForm = document.getElementById('add-book-form');
+        const bookListBody = document.getElementById('book-list-body');
+        const availableListBody = document.getElementById('available-list-body');
+        const issuedListBody = document.getElementById('issued-list-body');
+        const searchInput = document.getElementById('search-input');
+
+        // Helper to generate unique IDs
+        const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
+
+        // Load books from Local Storage
+        const loadBooks = () => {
+            const storedBooks = localStorage.getItem(STORAGE_KEY);
+            if (storedBooks) {
+                books = JSON.parse(storedBooks);
+            } else {
+                // Initial dummy data for demonstration
+                books = [
+                    { id: generateId(), title: 'Introduction to Algorithms', author: 'Cormen et al.', isbn: '978-0262033848', available: true, issuedTo: '', issueDate: '' },
+                    { id: generateId(), title: 'The Lord of the Rings', author: 'J.R.R. Tolkien', isbn: '978-0618260274', available: false, issuedTo: 'Alice Wonderland', issueDate: '2023-10-26' },
+                    { id: generateId(), title: 'Sapiens: A Brief History of Humankind', author: 'Yuval Noah Harari', isbn: '978-0062316097', available: true, issuedTo: '', issueDate: '' },
+                    { id: generateId(), title: 'Calculus: Early Transcendentals', author: 'James Stewart', isbn: '978-1305266728', available: false, issuedTo: 'Bob The Builder', issueDate: '2023-11-15' },
+                    { id: generateId(), title: 'Clean Code: A Handbook of Agile Software Craftsmanship', author: 'Robert C. Martin', isbn: '978-0132350884', available: true, issuedTo: '', issueDate: '' },
+                    { id: generateId(), title: 'The Hitchhiker\'s Guide to the Galaxy', author: 'Douglas Adams', isbn: '978-0345391803', available: true, issuedTo: '', issueDate: '' }
+                ];
+                saveBooks(); // Save initial data
+            }
+        };
+
+        // Save books to Local Storage
+        const saveBooks = () => {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+        };
+
+        // Render books into the tables based on the active section and optional search
+        const renderBooks = (filter = 'all', searchTerm = '') => {
+            bookListBody.innerHTML = '';
+            availableListBody.innerHTML = '';
+            issuedListBody.innerHTML = '';
+
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+            const matchedBooks = books.filter(book => {
+                const matchesSearch = searchTerm === '' ||
+                                      book.title.toLowerCase().includes(lowerCaseSearchTerm) ||
+                                      book.author.toLowerCase().includes(lowerCaseSearchTerm) ||
+                                      book.isbn.toLowerCase().includes(lowerCaseSearchTerm);
+                return matchesSearch;
+            });
+
+            // Populate All Books table
+            if (filter === 'all' || filter === 'inventory') {
+                matchedBooks.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.classList.add(book.available ? 'available-book-row' : 'issued-book-row');
+                    row.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.isbn}</td>
+                        <td>
+                            <span class="status-badge ${book.available ? 'status-available' : 'status-issued'}">
+                                ${book.available ? 'Available' : 'Issued'}
+                            </span>
+                        </td>
+                        <td>${book.issuedTo ? book.issuedTo : 'N/A'}</td>
+                        <td class="book-actions">
+                            ${book.available
+                                ? `<button class="btn btn-issue" data-id="${book.id}" data-action="issue">Issue 🚀</button>`
+                                : `<button class="btn btn-return" data-id="${book.id}" data-action="return">Return ✅</button>`
+                            }
+                        </td>
+                    `;
+                    bookListBody.appendChild(row);
+                });
+            }
+
+            // Populate Available Books table
+            if (filter === 'available') {
+                matchedBooks.filter(book => book.available).forEach(book => {
+                    const row = document.createElement('tr');
+                    row.classList.add('available-book-row');
+                    row.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.isbn}</td>
+                        <td><span class="status-badge status-available">Available</span></td>
+                        <td class="book-actions">
+                            <button class="btn btn-issue" data-id="${book.id}" data-action="issue">Issue 🚀</button>
+                        </td>
+                    `;
+                    availableListBody.appendChild(row);
+                });
+            }
+
+            // Populate Issued Books table
+            if (filter === 'issued') {
+                matchedBooks.filter(book => !book.available).forEach(book => {
+                    const row = document.createElement('tr');
+                    row.classList.add('issued-book-row');
+                    row.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.author}</td>
+                        <td>${book.issuedTo}</td>
+                        <td>${book.issueDate || 'N/A'}</td>
+                        <td class="book-actions">
+                            <button class="btn btn-return" data-id="${book.id}" data-action="return">Return ✅</button>
+                        </td>
+                    `;
+                    issuedListBody.appendChild(row);
+                });
+            }
+        };
+
+        // Show a specific section
+        const showSection = (sectionId) => {
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(`${sectionId}-section`).classList.add('active');
+
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.section === sectionId) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Only render books for the active section, passing the search term
+            renderBooks(sectionId, searchInput.value);
+        };
+
+        // Add a new book
+        const handleAddBook = (event) => {
+            event.preventDefault();
+            const title = document.getElementById('book-title').value.trim();
+            const author = document.getElementById('book-author').value.trim();
+            const isbn = document.getElementById('book-isbn').value.trim();
+
+            if (!title || !author || !isbn) {
+                alert('Please fill in all book details! 📚');
+                return;
+            }
+
+            const newBook = {
+                id: generateId(),
+                title,
+                author,
+                isbn,
+                available: true,
+                issuedTo: '',
+                issueDate: ''
+            };
+
+            books.push(newBook);
+            saveBooks();
+            addBookForm.reset();
+            alert(`"${title}" added successfully! ✨`);
+            showSection('inventory'); // Go back to inventory view
+        };
+
+        // Handle Issue/Return book actions
+        const handleBookAction = (event) => {
+            const target = event.target;
+            if (target.tagName === 'BUTTON' && target.dataset.id && (target.dataset.action === 'issue' || target.dataset.action === 'return')) {
+                const bookId = target.dataset.id;
+                const action = target.dataset.action;
+                const bookIndex = books.findIndex(book => book.id === bookId);
+
+                if (bookIndex > -1) {
+                    if (action === 'issue') {
+                        const issuedTo = prompt('Who is issuing this book? 🧑‍🎓');
+                        if (issuedTo && issuedTo.trim()) {
+                            books[bookIndex].available = false;
+                            books[bookIndex].issuedTo = issuedTo.trim();
+                            books[bookIndex].issueDate = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+                            alert(`"${books[bookIndex].title}" issued to ${issuedTo.trim()}! 🚀`);
+                        } else {
+                            alert('Issue cancelled. Please provide a name. 🚫');
+                        }
+                    } else if (action === 'return') {
+                        books[bookIndex].available = true;
+                        books[bookIndex].issuedTo = '';
+                        books[bookIndex].issueDate = '';
+                        alert(`"${books[bookIndex].title}" has been returned! ✅`);
+                    }
+                    saveBooks();
+                    const activeNavBtn = document.querySelector('.nav-btn.active');
+                    renderBooks(activeNavBtn ? activeNavBtn.dataset.section : 'all', searchInput.value); // Re-render current view
+                }
+            }
+        };
+
+        // Event Listeners
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                showSection(button.dataset.section);
+            });
+        });
+
+        addBookForm.addEventListener('submit', handleAddBook);
+
+        // Use event delegation for issue/return buttons within tables
+        document.getElementById('content-area').addEventListener('click', handleBookAction);
+
+        searchInput.addEventListener('input', (event) => {
+            const activeNavBtn = document.querySelector('.nav-btn.active');
+            renderBooks(activeNavBtn ? activeNavBtn.dataset.section : 'all', event.target.value);
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBooks();
+            showSection('inventory'); // Show inventory by default
+        });
+    </script>
+</body>
+</html>
